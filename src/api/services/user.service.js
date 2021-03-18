@@ -47,7 +47,7 @@ const createAccount = async newUser => {
         throw new customError({ name:'ErroSenha', message:'Senha com número de caracteres inválido', status:400 })
 
     if (!checkCPF(cpf))
-        throw new customError({})
+        throw new customError({ name: 'ErroCpf', message:'Cpf inválido', status: 400 })
 
     const checkUser = await repository.findByCpf(cpf)
 
