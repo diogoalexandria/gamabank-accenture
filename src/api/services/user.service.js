@@ -4,7 +4,7 @@ const { customError } = require('../../helpers/error')
 const checkPassword = senha => {
     const validPassword = new RegExp(
         '^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,30}$'
-    ) //Vá mais longe do trello
+    ) //TO DO revisar regex length 6
 
     if (validPassword.test(senha)) {
         console.log('Password is Valid')
@@ -40,14 +40,18 @@ function checkCPF(strCPF) {
 }
 
 const createUser = async newUser => {
-    const cpf = newUser.getCpf()
-    const password = newUser.getPassword()
+    const cpf = newUser.cpf
+    const password = newUser.password
 
-    if (!checkPassword(password))
+    if (!checkPassword(password)) {
+        console.log("Erro senha")
         throw new customError({ name:'ErroSenha', message:'Senha com número de caracteres inválido', status:400 })
+    }
 
-    if (!checkCPF(cpf))
+    if (!checkCPF(cpf)) {
+        console.log("Erro cpf")
         throw new customError({ name: 'ErroCpf', message:'Cpf inválido', status: 400 })
+    }
 
     const checkUser = await repository.findByCpf(cpf)
 

@@ -6,11 +6,11 @@ const { checkSchema } = require('../../helpers/schemaChecker')
 const newUser = async (request, h) => {
     try {
         console.log(h)
-        const user = new UserController(request.payload)
+        const userController = new UserController(request.payload)
 
-        const check = checkSchema(user)
+        const check = checkSchema(userController)
         if (check) {
-            const result = await service.createUser(user)
+            const result = await service.createUser(userController)
             return h.response(result).code(201)
         }
         return h.response({ error: "Dados inválidos" }).code(400)
