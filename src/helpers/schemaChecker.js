@@ -6,9 +6,9 @@ const checkSchema = (object) => {
     payloadKeys.forEach(key => {
         const value = object[key]
 
-        if (!value) {
+        if (!value)
             return false
-        }
+
         return true
     })
 }

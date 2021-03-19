@@ -1,27 +1,48 @@
 const faker = require('faker')
-const { assert, expect } = require('chai')
+const { assert } = require('chai')
 const { createUser } = require('../../src/api/services/user.service')
 const UserController = require('../../src/api/models/UserController')
-const { customError } = require('../../src/helpers/error')
 
 describe('Fluxo do user service.', () => {
     it('Should not create a user with an invalid password', async () => {
-        const firstName = 'João'
-        const lastName = 'Maria'
+        const firstName = 'Foo'
+        const lastName = 'Bar'
         const payload = {
             name: faker.name.findName(firstName, lastName, 0),
             email: faker.internet.email(firstName, lastName, 'gmail'),
             cpf: '22506732683',
-            password: 'Teste@_123'
+            password: '123'
             // password: faker.internet.password(9)
         }
         const userMock = new UserController(payload)
         console.log("userMock", userMock)
-        const customErrorMock = new customError({ name:'ErroSenha', message:'Senha com número de caracteres inválido', status:400 })
 
-        // const result = await createUser(userMock)
+        const result = await createUser(userMock)
 
-        expect(await createUser(userMock)).to.throw(customErrorMock)
-        // assert.throws(result, customErrorMock)
+        assert.equal(result.status, 'fail')
+        assert.equal(result.code, 400)
+        assert.equal(result.message, 'Senha com número de caracteres inválido')
     })
+
+    it('Should not create a user with an invalid cpf', async () => {
+        const firstName = 'Foo'
+        const lastName = 'Bar'
+        const payload = {
+            name: faker.name.findName(firstName, lastName, 0),
+            email: faker.internet.email(firstName, lastName, 'gmail'),
+            cpf: '12345678910',
+            password: 'SenhaTeste123'
+            // password: faker.internet.password(9)
+        }
+        const userMock = new UserController(payload)
+        console.log("userMock", userMock)
+
+        const result = await createUser(userMock)
+
+        assert.equal(result.status, 'fail')
+        assert.equal(result.code, 400)
+        assert.equal(result.message, 'Cpf inválido')
+    })
+
+
 })

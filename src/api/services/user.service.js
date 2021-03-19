@@ -1,15 +1,19 @@
 const repository = require('../repository/user.repository')
 const { customError } = require('../../helpers/error')
 
-const checkPassword = senha => {
-    const validPassword = new RegExp(
-        '^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,30}$'
-    ) //TO DO revisar regex length 6
+const checkPassword = password => {
+    // const validPassword = new RegExp(
+    //     '^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$'
+    // ) //TO DO revisar regex length 6
+    // console.log(validPassword.test(password))
+    // if (!validPassword.test(password)) {
+    //     console.log('Password is Valid')
+    //     return true
+    // }
+    // return false
 
-    if (validPassword.test(senha)) {
-        console.log('Password is Valid')
+    if (password.length > 6)
         return true
-    }
     return false
 }
 
@@ -45,21 +49,21 @@ const createUser = async newUser => {
 
     if (!checkPassword(password)) {
         console.log("Erro senha")
-        throw new customError({ name:'ErroSenha', message:'Senha com número de caracteres inválido', status:400 })
+        return { status: 'fail', message: 'Senha com número de caracteres inválido',result: {}, code: 400 }
     }
 
     if (!checkCPF(cpf)) {
         console.log("Erro cpf")
-        throw new customError({ name: 'ErroCpf', message:'Cpf inválido', status: 400 })
+        return { status: 'fail', message: 'Cpf inválido', result: {}, code: 400 }
     }
 
     const checkUser = await repository.findByCpf(cpf)
 
     if (checkUser.length === 0) {
         const result = await repository.save(newUser)
-        return result
+        return { status: 'success', message:'Usuário criado com sucesso.', result, code: 201 }
     } else {
-        throw new customError({ name:'ErroConflito', message:'Cpf já cadastrado', status:409 })
+        return { status: 'fail', message: 'Cpf já cadastrado', result: {}, code: 400 }
     }
 }
 

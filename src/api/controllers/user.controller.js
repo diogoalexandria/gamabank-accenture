@@ -10,8 +10,10 @@ const newUser = async (request, h) => {
 
         const check = checkSchema(userController)
         if (check) {
-            const result = await service.createUser(userController)
-            return h.response(result).code(201)
+            const { status, message, result, code } = await service.createUser(userController)
+            if (status === 'success')
+                return h.response({ message, result }).code(code)
+            return h.response({ error: message }).code(code)
         }
         return h.response({ error: "Dados inválidos" }).code(400)
     } catch (err) {
