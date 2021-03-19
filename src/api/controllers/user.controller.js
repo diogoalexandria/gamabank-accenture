@@ -16,6 +16,7 @@ const newUser = async (request, h) => {
             return h.response({ error: message }).code(code)
         }
         return h.response({ error: "Dados inválidos" }).code(400)
+
     } catch (err) {
         console.log(err)
         return h.response({ error: err.message }).code(err.statusCode)

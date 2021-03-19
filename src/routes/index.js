@@ -1,6 +1,7 @@
 const { status } = require('../api/controllers/app.controller')
 const authcontroller = require('../api/controllers/auth.controller')
 const usercontroller = require('../api/controllers/user.controller')
+const transition = require('./transition')
 
 const {
     LoginRequestDTO,
@@ -66,4 +67,4 @@ const newUser = {
     }
 }
 
-module.exports = [root, login, validate, newUser]
+module.exports = [root, login, validate, newaccount, ...transition]
