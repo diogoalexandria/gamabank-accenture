@@ -47,10 +47,10 @@ const validate = {
     handler: authcontroller.validate
 }
 
-const newaccount = {
+const newUser = {
     method: 'POST',
     path: '/signup',
-    handler: usercontroller.newAccount,
+    handler: usercontroller.newUser,
     options: {
         tags: ['api', 'register'],
         description: 'Rota de Cadastro do user'
@@ -66,4 +66,4 @@ const newaccount = {
     }
 }
 
-module.exports = [root, login, validate, newaccount]
+module.exports = [root, login, validate, newUser]

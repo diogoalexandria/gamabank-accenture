@@ -1,13 +1,13 @@
 const { customError } = require("./error")
 
 const checkSchema = (object) => {
-    const payloadKeys = Object.entries(object)
+    const payloadKeys = Object.keys(object)
 
-    payloadKeys.forEach((entry) => {
-        const value = entry[1]
+    payloadKeys.forEach(key => {
+        const value = object[key]
 
         if (!value) {
-            throw new customError('SchemaInvalido',`${entry[0]} obrigatório.`, 400)
+            return false
         }
         return true
     })

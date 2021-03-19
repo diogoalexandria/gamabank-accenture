@@ -1,7 +1,6 @@
-class customError {
+class customError extends Error {
     constructor({ name, message, status }) {
-        this.name = name,
-        this.message = message || 'Mensagem de erro padrão',
+        super({ name, message })
         this.stack = (new Error()).stack,
         this.statusCode = status || 400
     }

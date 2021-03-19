@@ -1,6 +1,6 @@
 const faker = require('faker')
 const { assert } = require('chai')
-const { newAccount } = require('../../src/api/controllers/user.controller')
+const { newUser } = require('../../src/api/controllers/user.controller')
 
 describe('Fluxo do user controller.', () => {
     it('Criação de conta.', async () => {
@@ -11,10 +11,11 @@ describe('Fluxo do user controller.', () => {
             name: faker.name.findName(firstName, lastName, 0),
             email: faker.internet.email(firstName, lastName, 'gmail'),
             cpf: '111.222.333-11',
-            password: faker.internet.password(32)
+            password: faker.internet.password(5)
         }
-
-        const result = await newAccount({ payload })
+        console.log("to aqui")
+        const result = await newUser({ payload })
+        console.log(result)
 
         assert.equal(result, 0) //TODO: change the expected return value
     })

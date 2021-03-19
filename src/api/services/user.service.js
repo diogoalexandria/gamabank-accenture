@@ -39,7 +39,7 @@ function checkCPF(strCPF) {
     return true
 }
 
-const createAccount = async newUser => {
+const createUser = async newUser => {
     const cpf = newUser.getCpf()
     const password = newUser.getPassword()
 
@@ -59,4 +59,4 @@ const createAccount = async newUser => {
     }
 }
 
-module.exports = { createAccount }
+module.exports = { createUser }
