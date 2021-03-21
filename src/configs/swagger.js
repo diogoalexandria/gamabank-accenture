@@ -8,8 +8,7 @@ const swagger = {
     options: {
         info: {
             title: 'Gamabank - Grupo Deno',
-            description:
-                'Descrição do projeto - Alterar em /configs/swagger.js',
+            description: 'API REST Financeira do Gamabank Grupo Deno',
             version: version
         }
     }

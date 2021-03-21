@@ -1,8 +1,6 @@
 const repository = require('../repository/user.repository')
-const { encryptPassword } = require('../../helpers/myCrypto')
-const { salt } = require('../../configs/env')
 const { cpfChecker, passwordChecker } = require('../../helpers/recordCheckers')
-const { CustomError } = require('../../helpers/error')
+const { CustomError } = require('../../helpers/CustomError')
 
 const createUser = async newUser => {
     try {

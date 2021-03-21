@@ -1,4 +1,4 @@
-const { CustomError } = require('../../helpers/error')
+const { CustomError } = require('../../helpers/CustomError')
 const { idGenerator } = require('../../helpers/id-generator')
 const { cpfChecker, valueChecker } = require('../../helpers/recordCheckers')
 const Transition = require('../models/Transition')
@@ -8,7 +8,6 @@ const {
 } = require('../models/transitionAccessoryTable')
 const transitionRepository = require('../repository/transition.repository')
 
-//attribute here: uuid, type, status,
 const createdDepositDebit = async transitionDTO => {
     try {
         const { cpf_recipient, cpf_payer, value } = transitionDTO

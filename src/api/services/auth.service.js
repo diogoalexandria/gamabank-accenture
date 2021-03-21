@@ -2,9 +2,9 @@ const jwt = require('jsonwebtoken')
 const config = require('../../configs/env')
 const { findByEmail } = require('../repository/user.repository')
 const { comparePassword } = require('../../helpers/myCrypto')
-const { CustomError } = require('../../helpers/error')
+const { CustomError } = require('../../helpers/CustomError')
 
-const login = async ({ emailPayload, password }) => {
+const login = async({ emailPayload, password }) => {
     try {
         const findResponse = await findByEmail(emailPayload)
         if (findResponse.length === 0) {

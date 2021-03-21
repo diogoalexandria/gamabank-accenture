@@ -1,12 +1,11 @@
 const dotenv = require('dotenv')
 
 dotenv.config({
-    path:
-        process.env.NODE_ENV === 'test'
-            ? '.env.test'
-            : process.env.NODE_ENV === 'development'
-            ? '.env.development'
-            : '.env'
+    path: process.env.NODE_ENV === 'test' ?
+        '.env.test' :
+        process.env.NODE_ENV === 'development' ?
+        '.env.development' :
+        '.env'
 })
 
 module.exports = {
@@ -22,6 +21,6 @@ module.exports = {
         port: process.env.DB_PORT
     },
     env: process.env.NODE_ENV,
-    secret: process.env.APP_SECRET, //TOKEN JWT
+    secret: process.env.APP_SECRET,
     salt: process.env.SALT
 }

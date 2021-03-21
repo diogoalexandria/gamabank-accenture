@@ -1,4 +1,4 @@
-const { CustomError } = require('./error')
+const { CustomError } = require('./CustomError')
 
 const cpfChecker = cpf => {
     const cpfRegex = /[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}/
@@ -6,8 +6,7 @@ const cpfChecker = cpf => {
     if (cpf.search(cpfRegex) === -1) {
         throw new CustomError({
             name: 'CPF inválido.',
-            message:
-                'O registro deve haver 11 dígitos além dos caracteres especiais ponto e traço.',
+            message: 'O registro deve haver 11 dígitos além dos caracteres especiais ponto e traço.',
             statusCode: 406
         })
     }
