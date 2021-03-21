@@ -25,9 +25,11 @@ const createdDepositDebit = async transitionDTO => {
             status
         })
 
-        const repositoryResult = await transitionRepository.save(newTransition)
+        const saveResult = await transitionRepository.save(newTransition)
 
-        if (repositoryResult.serverStatus > 0) {
+        const incrementResult = await transitionRepository.incrementDebitBalance({ value: newTransition.value, id_account: newTransition.id_account })
+
+        if (saveResult.serverStatus > 0 && incrementResult.serverStatus > 0) {
             const { id, type, status, value, description } = newTransition
             const response = {
                 id,
