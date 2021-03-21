@@ -1,42 +1,43 @@
 const faker = require('faker')
 const { assert } = require('chai')
 const { createUser } = require('../../src/api/services/user.service')
-const UserController = require('../../src/api/models/UserController')
+const { login } = require('../../src/api/services/auth.service')
 
-describe('Fluxo do user service.', () => {
-    it('Should not create a user with an invalid password', async () => {
-        const firstName = 'Foo'
-        const lastName = 'Bar'
-        const payload = {
-            name: faker.name.findName(firstName, lastName, 0),
-            email: faker.internet.email(firstName, lastName, 'gmail'),
-            cpf: '22506732683',
-            password: '123'
+describe('Fluxo de serviços de usuario.', () => {
+
+    const firstName = faker.name.firstName()
+    const lastName = faker.name.lastName()
+    const name = `${firstName} ${lastName}`
+    const email = faker.internet.email(firstName, lastName, 'gmail')
+    const cpf = '789.123.789-77'
+    const password = faker.internet.password(32)
+
+
+    it('Criação e acesso de usuario a plataforma.', async() => {
+
+        const signupPayload = {
+            name,
+            email,
+            cpf,
+            password
         }
-        const userMock = new UserController(payload)
 
-        const result = await createUser(userMock)
+        const signupResult = await createUser(signupPayload)
 
-        assert.equal(result.status, 'fail')
-        assert.equal(result.code, 400)
-        assert.equal(result.message, 'Senha com número de caracteres inválido')
-    })
+        const signupExpected = ['message']
 
-    it('Should not create a user with an invalid cpf', async () => {
-        const firstName = 'Foo'
-        const lastName = 'Bar'
-        const payload = {
-            name: faker.name.findName(firstName, lastName, 0),
-            email: faker.internet.email(firstName, lastName, 'gmail'),
-            cpf: '12345678910',
-            password: 'SenhaTeste123'
+        const loginPayload = {
+            email,
+            password
         }
-        const userMock = new UserController(payload)
 
-        const result = await createUser(userMock)
+        const loginResult = await login(loginPayload)
 
-        assert.equal(result.status, 'fail')
-        assert.equal(result.code, 400)
-        assert.equal(result.message, 'Cpf inválido')
+        const loginExpected = ['token']
+
+        assert.containsAllDeepKeys(signupResult, signupExpected)
+
+        assert.containsAllDeepKeys(loginResult, loginExpected)
+
     })
 })

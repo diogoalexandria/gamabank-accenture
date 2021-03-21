@@ -4,21 +4,22 @@ const { findByEmail } = require('../repository/user.repository')
 const { comparePassword } = require('../../helpers/myCrypto')
 const { CustomError } = require('../../helpers/CustomError')
 
-const login = async({ emailPayload, password }) => {
+const login = async({ email, password }) => {
     try {
-        const findResponse = await findByEmail(emailPayload)
+        const findResponse = await findByEmail(email)
         if (findResponse.length === 0) {
             throw new CustomError({
                 name: 'Email não cadastrado',
                 message: 'Email não cadastrado.',
                 statusCode: 404
             })
+
         }
 
         const {
             id,
             name,
-            email,
+            email: userEmail,
             cpf,
             salt,
             password: passwordEncrypted
@@ -35,7 +36,7 @@ const login = async({ emailPayload, password }) => {
                 statusCode: 409
             })
         }
-        const userJWTPayload = { id, name, email, cpf }
+        const userJWTPayload = { id, name, email: userEmail, cpf }
         const token = signedJWT(userJWTPayload)
 
         return {
