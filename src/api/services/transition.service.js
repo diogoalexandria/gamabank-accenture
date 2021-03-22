@@ -15,32 +15,45 @@ const createdDepositDebit = async transitionDTO => {
         cpfChecker(cpf_payer)
         valueChecker(value)
 
-        const id = idGenerator.generate()
-        const type = transitionTypes.deposit
-        const status = transitionStatus.pending
+        const newId = idGenerator.generate()
+        const typeDefault = transitionTypes.deposit
+        const statusDefault = transitionStatus.pending
         const newTransition = new Transition({
             ...transitionDTO,
-            id,
-            type,
-            status
+            id: newId,
+            type: typeDefault,
+            status: statusDefault
         })
 
         const saveResult = await transitionRepository.save(newTransition)
+        const incrementResult = await transitionRepository.incrementDebitBalance(
+            { value: newTransition.value, id_account: newTransition.id_account }
+        )
 
-        const incrementResult = await transitionRepository.incrementDebitBalance({ value: newTransition.value, id_account: newTransition.id_account })
-
-        if (saveResult.serverStatus > 0 && incrementResult.serverStatus > 0) {
-            const { id, type, status, value, description } = newTransition
-            const response = {
-                id,
-                type: transitionTypes[type],
-                status: transitionStatus[status],
-                value,
-                description
-            }
-
-            return response
+        if (saveResult.serverStatus < 1 || incrementResult.serverStatus < 1) {
+            throw new CustomError({
+                name: 'Falha no lançamento.',
+                message:
+                    'Houve um erro interno ao registrar a movimentação bancária.',
+                statusCode: 500
+            })
         }
+        const {
+            id,
+            type,
+            status,
+            value: consolidateValue,
+            description
+        } = newTransition
+        const response = {
+            id,
+            type: transitionTypes[type],
+            status: transitionStatus[status],
+            value: consolidateValue,
+            description
+        }
+
+        return response
     } catch (err) {
         throw new CustomError(err)
     }

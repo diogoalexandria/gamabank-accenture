@@ -10,8 +10,8 @@ const login = async (request, h) => {
     } catch (err) {
         return h
             .response({
-                name: err.name,
-                error: err.message
+                error: err.name,
+                message: err.message
             })
             .code(err.statusCode)
     }
