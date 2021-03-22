@@ -1,3 +1,4 @@
+const { CustomError } = require('../../helpers/CustomError')
 const service = require('../services/auth.service')
 
 const login = async (request, h) => {
@@ -16,15 +17,23 @@ const login = async (request, h) => {
     }
 }
 
-const validate = async (request, h) => {
+const validate = request => {
     const token = request.headers['x-access-token']
-    if (!token) return { auth: false, message: 'No token provided' }
+
+    if (!token) {
+        throw new CustomError({
+            name: 'JWT não fornecido.',
+            message: 'Rota é autenticada por token JWT.',
+            statusCode: 400
+        })
+    }
 
     try {
-        const result = await service.verifyJWT(token)
+        const result = service.verifyJWT(token)
+
         return result
-    } catch (error) {
-        return error
+    } catch (err) {
+        throw new CustomError(err)
     }
 }
 
