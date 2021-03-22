@@ -3,17 +3,17 @@ const config = require('../../configs/env')
 const { findByEmail } = require('../repository/user.repository')
 const { comparePassword } = require('../../helpers/myCrypto')
 const { CustomError } = require('../../helpers/CustomError')
+const UserJWTPayload = require('../models/UserJWTPayload')
 
-const login = async({ email, password }) => {
+const login = async ({ emailPayload, password }) => {
     try {
-        const findResponse = await findByEmail(email)
+        const findResponse = await findByEmail(emailPayload)
         if (findResponse.length === 0) {
             throw new CustomError({
                 name: 'Email não cadastrado',
                 message: 'Email não cadastrado.',
                 statusCode: 404
             })
-
         }
 
         const {
@@ -50,24 +50,25 @@ const login = async({ email, password }) => {
 const signedJWT = userPayload => {
     return jwt.sign(userPayload, config.secret, {
         algorithm: 'HS256',
-        expiresIn: 300
+        expiresIn: '1h'
     })
 }
 
-const verifyJWT = async token => {
-    return new Promise((resolve, reject) => {
-        jwt.verify(token, config.secret, (err, decoded) => {
-            if (err)
-                reject(
-                    new CustomError({
-                        message: 'JWT inválido',
-                        statusCode: 409
-                    })
-                )
+const verifyJWT = token => {
+    let verifyResult = new UserJWTPayload({})
 
-            resolve({ auth: true, data: decoded })
-        })
+    jwt.verify(token, config.secret, (err, decoded) => {
+        if (err) {
+            new CustomError({
+                message: 'JWT inválido',
+                statusCode: 409
+            })
+        }
+        const { id, name, email, cpf } = decoded
+        verifyResult = new UserJWTPayload({ id, name, email, cpf })
     })
+
+    return verifyResult
 }
 
 module.exports = { login, verifyJWT }
